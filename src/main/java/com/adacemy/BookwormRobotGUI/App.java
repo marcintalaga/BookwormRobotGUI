@@ -24,12 +24,14 @@ public class App extends Application {
 	public static final String HELION = "1";
 	public static final String GKN = "2";
 	public static final String SK = "3";
+	public static final String SELKAR = "4";
 
 	List<String> list = new ArrayList<String>();
 
 	CheckBox cbHelion;
 	CheckBox cbGKN;
 	CheckBox cbSK;
+	CheckBox cbSelkar;
 
 	Label response;
 	Label selected;
@@ -64,10 +66,14 @@ public class App extends Application {
 
 				try {
 
+					String workingdirectory = System.getProperty("user.dir");
+					System.out.println(workingdirectory);
+
+				
+
 					PrintWriter writer = new PrintWriter("mycrone.txt");
-					writer.println(
-							"* * * * * java -jar /home/marcin/.m2/repository/com/academy/BookwormRobot/0.0.1-SNAPSHOT/BookwormRobot-0.0.1-SNAPSHOT.jar "
-									+ builder);
+
+					writer.println("* * * * * java -jar " + workingdirectory + "/BookwormRobot-0.0.1-SNAPSHOT.jar " + builder);
 					writer.close();
 
 					Process proc1 = Runtime.getRuntime().exec("crontab -r");
@@ -92,6 +98,7 @@ public class App extends Application {
 		cbHelion = new CheckBox("Helion");
 		cbGKN = new CheckBox("Glowna Ksiegarnia Naukowa");
 		cbSK = new CheckBox("Swiat Ksiazki");
+		cbSelkar = new CheckBox("Selkar");
 
 		cbHelion.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -135,7 +142,21 @@ public class App extends Application {
 			}
 		});
 
-		rootNode.getChildren().addAll(heading, cbHelion, cbGKN, cbSK, response, selected, button);
+		cbSelkar.setOnAction(new EventHandler<ActionEvent>() {
+
+			public void handle(ActionEvent event) {
+				if (cbSelkar.isSelected()) {
+					list.add(SELKAR);
+					response.setText("Selkar was just selected.");
+				} else {
+					list.remove(SELKAR);
+					response.setText("Selkar was just cleared.");
+				}
+				showAll();
+			}
+		});
+
+		rootNode.getChildren().addAll(heading, cbHelion, cbGKN, cbSK, cbSelkar, response, selected, button);
 
 		myStage.show();
 		showAll();
@@ -150,6 +171,8 @@ public class App extends Application {
 			libraries += "GKN ";
 		if (cbSK.isSelected())
 			libraries += "SK ";
+		if (cbSelkar.isSelected())
+			libraries += "Selkar ";
 
 		selected.setText("Libraries selected: " + libraries);
 	}
